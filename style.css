@@ -1,0 +1,35 @@
+/* STEP 01–05: 기존 게임판 구조와 클래스 유지 */
+:root { color-scheme: light; --ink:#24354b; --blue:#245bc1; --line:#aeb9c9; }
+* { box-sizing:border-box; }
+body { margin:0; background:#f4f6fa; color:var(--ink); font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif; }
+main { max-width:520px; margin:auto; padding:24px 20px 32px; }
+header small { color:var(--blue); letter-spacing:.18em; font-weight:700; }
+h1 { margin:6px 0; font-size:32px; letter-spacing:-.05em; }
+header p,.help,footer { color:#58677a; font-size:13px; }
+button,select { font:inherit; color:inherit; background:white; border:1px solid #d3dae5; border-radius:8px; padding:10px; cursor:pointer; }
+button:disabled { opacity:.45; cursor:default; }
+button:focus-visible,select:focus-visible { outline:3px solid #427bea; outline-offset:2px; }
+.modes,.tools,.settings,.stats { display:flex; gap:8px; margin:12px 0; align-items:center; }
+.modes button,.tools button { flex:1; }
+.modes .active,#note.active { background:var(--blue); color:white; border-color:var(--blue); }
+.settings select { flex:1; }
+.stats { justify-content:space-between; font-size:13px; }
+.stats strong { font-variant-numeric:tabular-nums; margin-left:4px; }
+#board { display:grid; grid-template-columns:repeat(9,minmax(0,1fr)); grid-template-rows:repeat(9,minmax(0,1fr)); width:100%; aspect-ratio:1; border:2px solid var(--ink); background:white; }
+.cell { border:0; border-right:1px solid var(--line); border-bottom:1px solid var(--line); border-radius:0; padding:0; min-width:0; min-height:0; font-size:clamp(17px,5vw,26px); display:flex; justify-content:center; align-items:center; color:var(--blue); position:relative; }
+.cell:nth-child(9n) { border-right:0; }
+.cell:nth-child(n+73) { border-bottom:0; }
+.cell.border-bottom { border-bottom:2px solid var(--ink); }
+.cell.border-right { border-right:2px solid var(--ink); }
+.number-main { color:var(--ink); font-weight:700; background:#f8fafc; }
+.cell.related { background:#edf2fb; }
+.cell.selected { background:#bfdbfe; }
+.cell.wrong { color:#b42318; background:#fee4e2; }
+.cell.selected.wrong { box-shadow:inset 0 0 0 2px var(--blue); }
+.notes { display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); width:100%; height:100%; font-size:clamp(8px,2.3vw,12px); color:#52647e; }
+.notes span { display:grid; place-items:center; }
+#keypad { display:grid; grid-template-columns:repeat(9,1fr); gap:4px; }
+#keypad button { padding:10px 0; color:var(--blue); font-size:clamp(16px,4vw,23px); font-weight:600; }
+#status { min-height:24px; font-size:14px; font-weight:600; }
+footer { border-top:1px solid #d3dae5; padding-top:12px; }
+@media(max-width:380px){main{padding:16px 10px}.tools button{padding:8px 2px;font-size:12px}}

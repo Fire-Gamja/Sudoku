@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
+<title>오늘의 스도쿠</title>
+</head>
+<body>
+<main>
+<header><small>DAILY PUZZLE / 01</small><h1>오늘의 스도쿠</h1><p>한 칸씩 채워가는 논리의 즐거움.</p></header>
+<div class="modes"><button id="daily">오늘의 도전</button><button id="free">무제한 플레이</button></div>
+<div class="settings"><label for="difficulty">난이도</label><select id="difficulty"><option value="easy">쉬움</option><option value="normal">보통</option><option value="hard">어려움</option><option value="expert">전문가</option></select><button id="new">새 게임</button><button id="practice">실습 문제</button></div>
+<div class="stats"><span>시간 <strong id="timer">00:00</strong></span><span>실수 <strong id="mistakes">0</strong></span><span>힌트 <strong id="hints">3</strong></span></div>
+<div id="board" role="group" aria-label="스도쿠 게임판"></div>
+<div class="tools"><button id="undo">되돌리기</button><button id="erase">지우기</button><button id="note" aria-pressed="false">메모 OFF</button><button id="hint">힌트</button></div>
+<div id="keypad" aria-label="숫자 입력"></div>
+<p id="status" role="status"></p>
+<p class="help">숫자 키 또는 화면 버튼으로 입력 · 방향키로 이동 · N 메모 · Delete 지우기</p>
+<footer>기록 <span id="record">—</span> · 이 브라우저에 자동 저장</footer>
+</main>
+</body></html>
