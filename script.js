@@ -20,7 +20,7 @@ const levels = {easy:36,normal:42,hard:48,expert:54}; // 목표 빈칸 수 (기�
 let state, selected = -1, noteMode = false, history = [];
 const cells = [];
 const storageKey = 'study-sudoku-v1';
-const dateKey = () => new Date().toLocaleDateString('sv-SE');
+const dateKey = () => new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 function readStorage(key) { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } }
 function writeStorage(key,value) { try { localStorage.setItem(key,JSON.stringify(value)); } catch {} }
 
@@ -94,7 +94,7 @@ function start(mode,difficulty,practice=false) {
     let data;
     if(practice){const solution=copy(puzzle);solve(solution);data={initial:copy(puzzle),solution};}
     else data=generate(difficulty,mode==='daily'?seededRandom(day):Math.random);
-    state={...data,mode,difficulty,day,values:copy(data.initial),notes:emptyNotes(),seconds:0,mistakes:0,hints:3,won:false};
+    state={...data,mode,difficulty,day,rankEligible:mode==='daily',values:copy(data.initial),notes:emptyNotes(),seconds:0,mistakes:0,hints:3,won:false};
     selected=-1;noteMode=false;history=[];render();save();
 }
 
@@ -130,12 +130,12 @@ function render(){
         cell.setAttribute('aria-pressed',String(i===selected));
     }
     $('daily').classList.toggle('active',state.mode==='daily');$('free').classList.toggle('active',state.mode==='free');
-    $('difficulty').value=state.difficulty;$('difficulty').disabled=state.mode==='daily';
+    $('new').disabled=state.mode==='daily';$('difficulty').value=state.difficulty;$('difficulty').disabled=state.mode==='daily';
     $('note').classList.toggle('active',noteMode);$('note').textContent='메모 '+(noteMode?'ON':'OFF');$('note').setAttribute('aria-pressed',String(noteMode));
     $('mistakes').textContent=state.mistakes;$('hints').textContent=state.hints;
     $('undo').disabled=!history.length||state.won;$('hint').disabled=!state.hints||state.won;
     $('status').textContent=state.won?'완성! 모든 숫자를 정확하게 채웠어요.':state.mode==='daily'?`${state.day} · 오늘의 공통 퍼즐`:'자유롭게 새로운 퍼즐에 도전하세요.';
-    updateTimer();renderRecord();
+    updateTimer();renderRecord();document.dispatchEvent(new Event("sudoku:render"));
 }
 // STEP 08: 사용자 입력, 메모, 힌트, 되돌리기.
 function editable(){return selected>=0&&!state.won&&state.initial[Math.floor(selected/9)][selected%9]===0;}
@@ -188,12 +188,12 @@ function daily(){const saved=readStorage(storageKey+'-daily');if(saved&&saved.da
 function confirmNew(){return state.won||confirm('현재 게임을 초기화할까요?');}
 $('daily').addEventListener('click',()=>{if(state.mode!=='daily'||state.day!==dateKey())daily();});
 $('free').addEventListener('click',()=>{if(state.mode!=='free')start('free','easy');});
-$('new').addEventListener('click',()=>{if(confirmNew())start(state.mode,state.difficulty);});
+$('new').addEventListener('click',()=>{if(state.mode!=='daily'&&confirmNew())start(state.mode,state.difficulty);});
 $('difficulty').addEventListener('change',()=>{const level=$('difficulty').value;if(confirmNew())start('free',level);else render();});
 $('practice').addEventListener('click',()=>{if(confirmNew())start('free','hard',true);});
 $('note').addEventListener('click',toggleNote);$('erase').addEventListener('click',()=>inputNumber(0));$('hint').addEventListener('click',hint);$('undo').addEventListener('click',undo);
 document.addEventListener('keydown',e=>{
-    if(e.ctrlKey||e.metaKey||e.altKey||e.target.tagName==='SELECT'||e.target.tagName==='INPUT')return;
+    if($('completion').open||e.ctrlKey||e.metaKey||e.altKey||e.target.tagName==='SELECT'||e.target.tagName==='INPUT')return;
     if(/^[1-9]$/.test(e.key)){e.preventDefault();inputNumber(Number(e.key));}
     else if(e.key==='Delete'||e.key==='Backspace'||e.key==='0'){e.preventDefault();inputNumber(0);}
     else if(e.key.toLowerCase()==='n'){e.preventDefault();toggleNote();}

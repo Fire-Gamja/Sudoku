@@ -5,11 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
 <script src="script.js" defer></script>
+<script src="supabase-config.js" defer></script>
+<script src="ranking.js" defer></script>
 <title>오늘의 스도쿠</title>
 </head>
 <body>
 <main>
 <header><small>DAILY PUZZLE / 01</small><h1>오늘의 스도쿠</h1><p>한 칸씩 채워가는 논리의 즐거움.</p></header>
+<div class="layout"><section class="game">
 <div class="modes"><button id="daily">오늘의 도전</button><button id="free">무제한 플레이</button></div>
 <div class="settings"><label for="difficulty">난이도</label><select id="difficulty"><option value="easy">쉬움</option><option value="normal">보통</option><option value="hard">어려움</option><option value="expert">전문가</option></select><button id="new">새 게임</button><button id="practice">실습 문제</button></div>
 <div class="stats"><span>시간 <strong id="timer">00:00</strong></span><span>실수 <strong id="mistakes">0</strong></span><span>힌트 <strong id="hints">3</strong></span></div>
@@ -17,7 +20,19 @@
 <div class="tools"><button id="undo">되돌리기</button><button id="erase">지우기</button><button id="note" aria-pressed="false">메모 OFF</button><button id="hint">힌트</button></div>
 <div id="keypad" aria-label="숫자 입력"></div>
 <p id="status" role="status"></p>
-<p class="help">숫자 키 또는 화면 버튼으로 입력 · 방향키로 이동 · N 메모 · Delete 지우기</p>
-<footer>기록 <span id="record">—</span> · 이 브라우저에 자동 저장</footer>
-</main>
-</body></html>
+
+<button id="reopen-completion" type="button" hidden>완료 결과 및 제출 확인</button><footer>기록 <span id="record">—</span> · 이 브라우저에 자동 저장</footer>
+</section><aside>
+<section class="panel"><div class="panel-heading"><h2>오늘의 랭킹</h2><button id="refresh-ranking" type="button">새로고침</button></div><p id="ranking-date"></p><p id="ranking-status" role="status">연결 확인 중</p><ol id="ranking-list"></ol><p class="help">힌트 없이 완성한 첫 도전만 등록 · 실수 적은 순, 시간 빠른 순</p></section>
+<section class="panel"><h2>게임 방법</h2><p>가로, 세로, 3×3 구역마다 1~9가 한 번씩 들어가도록 빈칸을 채우세요.</p><dl><dt>1–9</dt><dd>숫자 입력</dd><dt>방향키</dt><dd>셀 이동</dd><dt>N</dt><dd>메모 모드</dd><dt>Delete / 0</dt><dd>숫자 지우기</dd></dl><p class="help">오늘의 도전은 한국 시간 자정에 갱신됩니다. 힌트를 사용하면 랭킹 등록은 제외됩니다.</p></section>
+</aside></div></main>
+<dialog id="completion" class="completion" aria-labelledby="completion-title">
+  <span class="completion-icon" aria-hidden="true">✓</span>
+  <small class="completion-eyebrow">PUZZLE COMPLETE</small>
+  <h2 id="completion-title">퍼즐 완성!</h2>
+  <p id="completion-stats"></p><p id="completion-message" role="status"></p>
+  <form id="ranking-form" hidden><label for="nickname">닉네임</label><input id="nickname" minlength="2" maxlength="20" required placeholder="2~20자" autocomplete="nickname"><button id="submit-ranking" type="submit">제출하기</button></form>
+  <div id="result" hidden role="status"><small>오늘의 순위</small><strong id="result-rank"></strong><p id="result-detail"></p></div>
+  <button id="close-completion" type="button">게임판 보기</button>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+</dialog></body></html>
