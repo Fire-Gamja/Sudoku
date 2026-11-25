@@ -44,9 +44,11 @@ $('ranking-form').addEventListener('submit',async e=>{
     const nickname=$('nickname').value.trim();if(nickname.length<2||nickname.length>20){$('completion-message').textContent='닉네임은 2~20자로 입력해 주세요.';return;}
     rankingBusy=true;$('submit-ranking').disabled=true;$('close-completion').disabled=true;const day=state.day;
     try{
-        await rpc('sudoku_submit',{p_day:day,p_player:playerId(),p_nickname:nickname,p_seconds:Math.max(1,state.seconds),p_mistakes:state.mistakes});
-        await refreshMyRank(day,false);
-        writeStorage('sudoku-submitted-day',day);writeStorage('sudoku-nickname',nickname);rankForm();
+        const submittedScore=await rpc('sudoku_submit',{p_day:day,p_player:playerId(),p_nickname:nickname,p_seconds:Math.max(1,state.seconds),p_mistakes:state.mistakes});
+        // The insert and rank calculation are one server transaction. Persist success immediately.
+        writeStorage('sudoku-submitted-day',day);writeStorage('sudoku-nickname',nickname);
+        rankResult={rank:submittedScore.rank,nickname:submittedScore.nickname,seconds:submittedScore.seconds,mistakes:submittedScore.mistakes};
+        resultDay=day;rankForm();
         if(state.mode==='daily'&&state.day===day&&state.won&&readStorage('sudoku-celebrated-day')!==day){writeStorage('sudoku-celebrated-day',day);confetti();}
         await loadRanking();
     }catch(e){$('completion-message').textContent='제출 또는 순위 조회 실패. 다시 시도해 주세요.';console.warn(e);}finally{rankingBusy=false;$('submit-ranking').disabled=!configured;$('close-completion').disabled=false;}
