@@ -94,7 +94,7 @@ function start(mode,difficulty,practice=false) {
     let data;
     if(practice){const solution=copy(puzzle);solve(solution);data={initial:copy(puzzle),solution};}
     else data=generate(difficulty,mode==='daily'?seededRandom(day):Math.random);
-    state={...data,mode,difficulty,day,rankEligible:mode==='daily',values:copy(data.initial),notes:emptyNotes(),seconds:0,mistakes:0,hints:3,won:false};
+    state={...data,mode,difficulty,day,rankEligible:!practice,values:copy(data.initial),notes:emptyNotes(),seconds:0,mistakes:0,hints:3,won:false};
     selected=-1;noteMode=false;history=[];render();save();
 }
 
